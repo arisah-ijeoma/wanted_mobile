@@ -1,26 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+'use strict';
 
-import React, { Component, PropTypes } from 'react';
-import { AppRegistry, NavigatorIOS, Text } from 'react-native';
-import SignupForm from './components/SignupForm'
-export default class WantedApp extends Component {
-  render() {
-    return (
-      <NavigatorIOS
-        initialRoute={{
-          title: 'Create Account',
-          component: SignupForm,
-          navigationBarHidden: true
-        }}
-        style={{flex: 1}}
-      />
-    );
-  }
-}
-
+import React, { Component } from 'react';
+import { AppRegistry } from 'react-native';
+import WantedApp from './App/container/';
 
 AppRegistry.registerComponent('Wanted', () => WantedApp);

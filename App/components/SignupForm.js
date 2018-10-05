@@ -8,8 +8,15 @@ import {
   Text,
   TouchableHighlight,
   View,
-  AlertIOS
+  Alert
 } from 'react-native';
+
+
+function formatResponse(response) {
+    return response.json().then((json) => {
+        return response.ok ? json : Promise.reject(json);
+    });
+}
 
 const styles = StyleSheet.create({
   textInput: {
@@ -53,7 +60,6 @@ export default class SignupForm extends Component {
       full_name: 'ff fasf',
       address: 'fff fasdf',
       phone_number: '12345678912',
-      role: 'f',
       email: 'fasf@fasf.com',
       password: 'ff123456',
       errorMatching: '',
@@ -67,11 +73,10 @@ export default class SignupForm extends Component {
   }
 
   signUpPressed () {
-    isValid = this._validateInput();
+    const isValid = this._validateInput();
     var state = this.state;
     state['password_confirmation'] = state.password;
-    body = {user: state};
-    console.log(JSON.stringify(body))
+    const body = {user: state};
     if (isValid) {
       this.setState({canSubmit: false})
       fetch('http://localhost:3000/v1/users', {
@@ -79,13 +84,13 @@ export default class SignupForm extends Component {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body)
       })
-      .then(response => response.json())
+      .then(formatResponse)
       .then(json => {
-        console.log(json);
+
       })
       .catch(error => {
           this.setState({canSubmit: true})
-          AlertIOS.prompt('Opps!', error.message,
+          Alert.alert('Opps!', error.message || error.error,
            [{text:'Dismiss', style: 'cancel'}], null)
       })
     }
@@ -103,39 +108,43 @@ export default class SignupForm extends Component {
     return (
       <View style={styles.formContainer}>
           <View >
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"Full name"}
-                value={this.state.full_name}
-                onChangeText={ (full_name)=>{ this.setState({full_name}); }}
-                /></View>
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"Address"}
-                value={this.state.address}
-                onChangeText={ (address)=>{ this.setState({address}); }}
-              /></View>
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"Phone number"}
-                value={this.state.phone_number}
-                onChangeText={ (phone_number)=>{ this.setState({phone_number}); }}
-              /></View>
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"E-mail"}
-                value={this.state.email}
-                onChangeText={ (email)=>{ this.setState({email}); }}
-              /></View>
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"Password"}
-                secureTextEntry={true}
-                value={this.state.password}
-                onChangeText={ (password)=>{ this.setState({password}); }}
-              /></View>
-              
-              <View style={styles.textView}><TextInput style={styles.textInput} 
-                placeholder={"Confirm Password"}
-                secureTextEntry={true}
-                value={this.state.password}
-                onChangeText={ (password)=>{ this._validatePassword(password); }}
-              /></View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"Full name"}
+                  value={this.state.full_name}
+                  onChangeText={ (full_name)=>{ this.setState({full_name}); }}
+                  /></View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"Address"}
+                  value={this.state.address}
+                  onChangeText={ (address)=>{ this.setState({address}); }}/>
+              </View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"Phone number"}
+                  value={this.state.phone_number}
+                  onChangeText={ (phone_number)=>{ this.setState({phone_number}); }}/>
+              </View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"E-mail"}
+                  value={this.state.email}
+                  onChangeText={ (email)=>{ this.setState({email}); }}/>
+              </View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"Password"}
+                  secureTextEntry={true}
+                  value={this.state.password}
+                  onChangeText={ (password)=>{ this.setState({password}); }}/>
+              </View>
+              <View style={styles.textView}>
+                <TextInput style={styles.textInput} 
+                  placeholder={"Confirm Password"}
+                  secureTextEntry={true}
+                  onChangeText={ (password)=>{ this._validatePassword(password); }}/>
+              </View>
               <Text style={{color: 'red'}}>
                 {this.state.errorMatching}
               </Text> 
